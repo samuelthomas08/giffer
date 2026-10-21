@@ -17,8 +17,8 @@ in deinen Chat ein.
   und Ton, nicht nur einzelne Wörter.
 - **Schnelle Suche**: Live-Suche über alle Felder, Filter-Chips für die häufigsten Emotionen. `Enter` kopiert
   den besten Treffer.
-- **Favoriten**: Mit dem Stern markierst du deine liebsten GIFs. Sie tragen ein Sternchen auf der Karte, lassen sich
-  über den Chip **Favoriten** gezielt filtern (auch zusammen mit der Suche), und bei gleich gutem Treffer stehen sie
+- **Favoriten**: Mit dem Stern oben links auf jeder Karte markierst du deine liebsten GIFs (gelb gefüllt = Favorit).
+  Der Chip **Favoriten** zeigt nur diese (auch zusammen mit der Suche), und bei gleich gutem Treffer stehen sie
   in der Suche und bei **GIF vorschlagen** vorne.
 - **Animierte Vorschau**: Beim Überfahren spielt ein GIF ab, rechts im Detail-Panel sieht man es groß.
 - **Ein Klick in deine Anwendung**: Der Papierflieger-Button legt das GIF in die Zwischenablage, holt eine
@@ -46,7 +46,7 @@ Windows SmartScreen warnt bei unbekannten, nicht signierten Programmen: „Weite
 | Suchen | Tippen. `Strg+F` springt in die Suche, `Esc` leert sie |
 | Passendes GIF zu einer Nachricht finden | **GIF vorschlagen** oder `Strg+G`, Text eingeben, `Strg+Enter` |
 | Details ansehen und bearbeiten | Auf eine Karte klicken |
-| Favorit markieren | Stern auf der Karte (beim Überfahren) oder oben im Detail-Panel. Der Chip **Favoriten** zeigt nur Favoriten |
+| Favorit markieren | Stern oben links auf der Karte oder oben im Detail-Panel. Der Chip **Favoriten** zeigt nur Favoriten |
 | In die Zwischenablage kopieren | Doppelklick auf die Karte oder der Kopieren-Button |
 | In eine Anwendung einfügen | Papierflieger-Button (auf der Karte beim Überfahren, oder im Detail-Panel) |
 | Andere Anwendung wählen | `Umschalt` gedrückt halten beim Klick auf den Papierflieger |
