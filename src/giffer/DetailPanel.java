@@ -40,6 +40,8 @@ final class DetailPanel extends VBox {
     private final Label statusText = new Label();
     private final Button analyzeButton = new Button();
     private final Button openSourceButton;
+    private final Tooltip favoriteTooltip = new Tooltip();
+    private Button favoriteButton;
 
     DetailPanel(GifferApp app) {
         this.app = app;
@@ -80,8 +82,13 @@ final class DetailPanel extends VBox {
 
     private Node createHeader() {
         Label title = Ui.label("Details", "detail-title");
+        favoriteButton = Ui.iconButton("star", null, () -> {
+            if (shownEntry != null) app.toggleFavorite(shownEntry);
+        });
+        favoriteTooltip.setShowDelay(Duration.millis(350));
+        favoriteButton.setTooltip(favoriteTooltip);
         Button closeButton = Ui.iconButton("close", "Schließen (Esc)", () -> app.selectEntry(null));
-        HBox header = new HBox(title, Ui.horizontalSpacer(), closeButton);
+        HBox header = new HBox(4, title, Ui.horizontalSpacer(), favoriteButton, closeButton);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(14, 14, 6, 20));
         return header;
@@ -178,7 +185,15 @@ final class DetailPanel extends VBox {
         boolean hasSourcePage = !entry.sourceUrl.isBlank();
         openSourceButton.setVisible(hasSourcePage);
         openSourceButton.setManaged(hasSourcePage);
+        refreshFavorite(entry);
         refreshStatus();
+    }
+
+    /** Updates only the star in the header (the text fields may be in the middle of an edit). */
+    void refreshFavorite(GifEntry entry) {
+        if (entry != shownEntry) return;
+        Ui.setStarFilled(favoriteButton.getGraphic(), entry.favorite);
+        favoriteTooltip.setText(entry.favorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
     }
 
     void clear() {

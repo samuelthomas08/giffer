@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.HeaderBar;
 import javafx.scene.layout.HeaderDragType;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -79,6 +80,8 @@ public final class GifferApp extends Application {
     private int shownCardCount;
     private final Map<String, GifCard> cardsByEntryId = new HashMap<>();
     private boolean usesExtendedWindowFrame;
+    /** When true the grid shows only favourites (combined with whatever is typed in the search). */
+    private boolean favoritesOnly;
     private String libraryLoadError;
 
     // ---------------------------------------------------------------- UI
@@ -93,6 +96,8 @@ public final class GifferApp extends Application {
     private Button analyzeAllButton;
     private Node emptyLibraryView;
     private Node noResultsView;
+    private StackPane noResultsRing;
+    private Label noResultsTitle;
     private Label noResultsText;
     private DetailPanel detailPanel;
     private StackPane dropOverlay;
@@ -368,19 +373,20 @@ public final class GifferApp extends Application {
     }
 
     private Node buildNoResultsView() {
-        Label title = Ui.label("Nichts gefunden", "h1");
+        noResultsTitle = Ui.label("Nichts gefunden", "h1");
         noResultsText = Ui.label("", "muted");
         noResultsText.setWrapText(true);
         noResultsText.setMaxWidth(440);
         noResultsText.setTextAlignment(TextAlignment.CENTER);
-        VBox view = new VBox(14, createIconRing("search"), title, noResultsText);
+        noResultsRing = createIconRing("search");
+        VBox view = new VBox(14, noResultsRing, noResultsTitle, noResultsText);
         view.setAlignment(Pos.CENTER);
         view.setVisible(false);
         return view;
     }
 
     /** The rounded square with an icon above the headline of the empty-state views. */
-    private static Node createIconRing(String iconName) {
+    private static StackPane createIconRing(String iconName) {
         StackPane ring = new StackPane(Ui.icon(iconName, 24));
         ring.getStyleClass().add("empty-ring");
         ring.setMaxSize(56, 56);
@@ -403,7 +409,7 @@ public final class GifferApp extends Application {
 
     /** Searches again and rebuilds the visible cards; keeps the scroll position and already loaded cards. */
     void refreshResultsNow() {
-        searchResults = library.search(searchField.getText());
+        searchResults = library.search(searchField.getText(), favoritesOnly);
         cardsByEntryId.keySet().retainAll(library.allIds());
         showCards(Math.max(shownCardCount, CARDS_PER_BATCH));
         updateFilterChips();
@@ -438,15 +444,27 @@ public final class GifferApp extends Application {
 
         String query = searchField.getText().strip();
         if (nothingMatches) {
-            noResultsText.setText("Zu „" + query + "“ passt kein GIF. Versuch ein verwandtes Wort, eine Emotion "
-                    + "(z. B. „Freude“) oder beschreibe die Situation.");
+            boolean noFavoritesYet = favoritesOnly && query.isEmpty();
+            noResultsRing.getChildren().setAll(Ui.icon(noFavoritesYet ? "star" : "search", 24));
+            noResultsTitle.setText(noFavoritesYet ? "Noch keine Favoriten" : "Nichts gefunden");
+            if (noFavoritesYet) {
+                noResultsText.setText("Markiere GIFs mit dem Stern, dann findest du sie hier wieder.");
+            } else if (favoritesOnly) {
+                noResultsText.setText("Unter deinen Favoriten passt kein GIF zu „" + query + "“. Schalte den Filter "
+                        + "„Favoriten“ aus, um alle GIFs zu durchsuchen.");
+            } else {
+                noResultsText.setText("Zu „" + query + "“ passt kein GIF. Versuch ein verwandtes Wort, eine Emotion "
+                        + "(z. B. „Freude“) oder beschreibe die Situation.");
+            }
         }
         if (libraryIsEmpty) {
             countLabel.setText("");
-        } else if (query.isEmpty()) {
-            countLabel.setText(library.size() + (library.size() == 1 ? " GIF" : " GIFs"));
-        } else {
+        } else if (!query.isEmpty()) {
             countLabel.setText(searchResults.size() + " Treffer");
+        } else if (favoritesOnly) {
+            countLabel.setText(searchResults.size() + (searchResults.size() == 1 ? " Favorit" : " Favoriten"));
+        } else {
+            countLabel.setText(library.size() + (library.size() == 1 ? " GIF" : " GIFs"));
         }
 
         int pendingAnalysisCount = settings != null && settings.hasGeminiApiKey() ? library.entriesNeedingAnalysis().size() : 0;
@@ -459,7 +477,15 @@ public final class GifferApp extends Application {
         filterChips.getChildren().clear();
         if (library.size() == 0) return;
         String currentQuery = GifLibrary.normalizeForSearch(searchField.getText());
-        filterChips.getChildren().add(createFilterChip("Alle", currentQuery.isEmpty(), () -> searchField.clear()));
+        filterChips.getChildren().add(createFilterChip("Alle", currentQuery.isEmpty() && !favoritesOnly, this::showAllGifs));
+
+        Label favoritesChip = createFilterChip("Favoriten", favoritesOnly, () -> setFavoritesOnly(!favoritesOnly));
+        Pane starIcon = Ui.icon("star", 12);
+        Ui.setStarFilled(starIcon, favoritesOnly);
+        favoritesChip.setGraphic(starIcon);
+        favoritesChip.setGraphicTextGap(6);
+        filterChips.getChildren().add(favoritesChip);
+
         for (String emotion : library.mostUsedEmotions(FILTER_CHIP_COUNT)) {
             boolean isActive = GifLibrary.normalizeForSearch(emotion).equals(currentQuery);
             filterChips.getChildren().add(createFilterChip(emotion, isActive, () -> searchField.setText(isActive ? "" : emotion)));
@@ -472,6 +498,30 @@ public final class GifferApp extends Application {
         if (isActive) chip.getStyleClass().add("active");
         chip.setOnMouseClicked(_ -> onClick.run());
         return chip;
+    }
+
+    /** The "Alle" chip: no search text and no favourites filter. */
+    private void showAllGifs() {
+        boolean hadSearchText = !searchField.getText().isEmpty();
+        searchField.clear(); // a changed text refreshes the results by itself
+        if (favoritesOnly || !hadSearchText) setFavoritesOnly(false);
+    }
+
+    private void setFavoritesOnly(boolean enabled) {
+        favoritesOnly = enabled;
+        shownCardCount = 0;
+        resultsScroll.setVvalue(0);
+        refreshResultsNow();
+    }
+
+    /** Stars or un-stars a GIF; with the favourites filter on, the card disappears right away. */
+    void toggleFavorite(GifEntry entry) {
+        entry.favorite = !entry.favorite;
+        GifCard card = cardsByEntryId.get(entry.id);
+        if (card != null) card.refresh();
+        if (selectedEntry == entry) detailPanel.refreshFavorite(entry);
+        saveDebounce.playFromStart();
+        if (favoritesOnly || !searchField.getText().isBlank()) refreshResultsSoon();
     }
 
     /** One line of chips; whatever does not fit is hidden (the first chip, "Alle", always stays). */

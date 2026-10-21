@@ -94,15 +94,17 @@ final class SuggestionWorkflow {
             selected.addAll(candidates);
             return skippedCount;
         }
-        // too many: entries that share words with the message first, then the newest ones
+        // too many: entries that share words with the message first, then favourites, then the newest ones
         Set<GifEntry> chosen = new HashSet<>();
         for (GifEntry entry : app.library.search(message)) {
             if (selected.size() >= MAX_CATALOG_ENTRIES / 2) break;
             if (candidates.contains(entry) && chosen.add(entry)) selected.add(entry);
         }
-        for (GifEntry entry : candidates) {
-            if (selected.size() >= MAX_CATALOG_ENTRIES) break;
-            if (chosen.add(entry)) selected.add(entry);
+        for (boolean favoritesPass : new boolean[]{true, false}) {
+            for (GifEntry entry : candidates) {
+                if (selected.size() >= MAX_CATALOG_ENTRIES) break;
+                if (entry.favorite == favoritesPass && chosen.add(entry)) selected.add(entry);
+            }
         }
         return skippedCount;
     }
@@ -122,7 +124,8 @@ final class SuggestionWorkflow {
                     ? entry.usageHint.substring(0, MAX_USAGE_HINT_LENGTH) : entry.usageHint;
             // an entry without title still needs something recognisable: fall back to its description
             String title = entry.title.isBlank() ? entry.description : entry.title;
-            catalog.add(new GeminiClient.CatalogItem(index + 1, title, List.copyOf(entry.emotions), List.copyOf(keywords), usageHint));
+            catalog.add(new GeminiClient.CatalogItem(index + 1, title, List.copyOf(entry.emotions), List.copyOf(keywords),
+                    usageHint, entry.favorite));
         }
         return catalog;
     }
