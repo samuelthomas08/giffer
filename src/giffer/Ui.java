@@ -64,6 +64,7 @@ final class Ui {
         ICON_PATHS.put("error", circlePath(12, 12, 10) + "M15 9l-6 6M9 9l6 6");
         ICON_PATHS.put("play", circlePath(12, 12, 10) + "M10 8l6 4-6 4z");
         ICON_PATHS.put("send", "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zM21.854 2.147l-10.94 10.939");
+        ICON_PATHS.put("star", "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z");
         ICON_PATHS.put("upload", "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12");
     }
 
@@ -85,6 +86,12 @@ final class Ui {
         box.setMaxSize(sizePixels, sizePixels);
         box.setMouseTransparent(true);
         return box;
+    }
+
+    /** Fills (or empties) a star created with {@code icon("star", ...)}; the colour comes from {@code .star-on} in app.css. */
+    static void setStarFilled(Node starIcon, boolean filled) {
+        starIcon.getStyleClass().remove("star-on");
+        if (filled) starIcon.getStyleClass().add("star-on");
     }
 
     /** {@code styleVariants} is space separated, e.g. "primary", "outline", "ghost small", "danger". */

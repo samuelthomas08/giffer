@@ -194,22 +194,44 @@ final class GifLibrary {
 
     /** Entries matching the query, best match first; an empty query returns everything, newest first. */
     synchronized List<GifEntry> search(String query) {
+        return search(query, false);
+    }
+
+    /**
+     * Like {@link #search(String)}, optionally restricted to favourites. Equally good matches are ordered
+     * favourites first, then newest first.
+     */
+    synchronized List<GifEntry> search(String query, boolean favoritesOnly) {
         String[] searchWords = normalizeForSearch(query).split("[\\s,;]+");
-        List<GifEntry> allEntries = new ArrayList<>(entries);
+        List<GifEntry> candidates = new ArrayList<>();
+        for (GifEntry entry : entries) {
+            if (!favoritesOnly || entry.favorite) candidates.add(entry);
+        }
+        Comparator<GifEntry> newestFirst = Comparator.comparingLong((GifEntry entry) -> entry.addedAtMillis).reversed();
         boolean queryIsEmpty = searchWords.length == 1 && searchWords[0].isEmpty();
         if (queryIsEmpty) {
-            allEntries.sort(Comparator.comparingLong((GifEntry entry) -> entry.addedAtMillis).reversed());
-            return allEntries;
+            candidates.sort(newestFirst);
+            return candidates;
         }
 
         Map<GifEntry, Double> scores = new HashMap<>();
-        for (GifEntry entry : allEntries) {
+        for (GifEntry entry : candidates) {
             double score = relevanceScore(entry, searchWords);
             if (score > 0) scores.put(entry, score);
         }
         List<GifEntry> matches = new ArrayList<>(scores.keySet());
-        matches.sort(Comparator.comparingDouble((GifEntry entry) -> scores.get(entry)).reversed());
+        matches.sort(Comparator.comparingDouble((GifEntry entry) -> scores.get(entry)).reversed()
+                .thenComparing((GifEntry entry) -> !entry.favorite)
+                .thenComparing(newestFirst));
         return matches;
+    }
+
+    synchronized int favoriteCount() {
+        int count = 0;
+        for (GifEntry entry : entries) {
+            if (entry.favorite) count++;
+        }
+        return count;
     }
 
     private static double relevanceScore(GifEntry entry, String[] searchWords) {

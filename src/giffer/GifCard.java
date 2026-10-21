@@ -18,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -41,6 +42,8 @@ final class GifCard extends StackPane implements MasonryPane.HeightForWidth {
     private final Label titleLabel = new Label();
     private final VBox titleOverlay = new VBox();
     private final StackPane statusBadge = new StackPane();
+    private final Button favoriteButton;
+    private final Tooltip favoriteTooltip = new Tooltip();
     private final HBox hoverActions;
     private final AnimationCache.Player animationPlayer = new AnimationCache.Player();
     private Image thumbnail;
@@ -72,15 +75,20 @@ final class GifCard extends StackPane implements MasonryPane.HeightForWidth {
         StackPane.setMargin(hoverActions, new Insets(8));
 
         statusBadge.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-        StackPane.setAlignment(statusBadge, Pos.TOP_LEFT);
-        StackPane.setMargin(statusBadge, new Insets(8));
+        favoriteButton = createFavoriteButton();
+        HBox topLeftControls = new HBox(6, favoriteButton, statusBadge);
+        topLeftControls.setAlignment(Pos.CENTER_LEFT);
+        topLeftControls.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        topLeftControls.setPickOnBounds(false);
+        StackPane.setAlignment(topLeftControls, Pos.TOP_LEFT);
+        StackPane.setMargin(topLeftControls, new Insets(8));
 
         // selection outline: a separate node on top, because the image would otherwise cover the card's own border
         Region selectionRing = new Region();
         selectionRing.getStyleClass().add("card-ring");
         selectionRing.setMouseTransparent(true);
 
-        getChildren().addAll(imageView, titleOverlay, selectionRing, statusBadge, hoverActions);
+        getChildren().addAll(imageView, titleOverlay, selectionRing, topLeftControls, hoverActions);
         roundedClip.setArcWidth(CORNER_DIAMETER);
         roundedClip.setArcHeight(CORNER_DIAMETER);
         setClip(roundedClip);
@@ -104,6 +112,16 @@ final class GifCard extends StackPane implements MasonryPane.HeightForWidth {
         setOnDragDone(_ -> app.draggingFromGrid = false);
 
         refresh();
+    }
+
+    /** The star in the top left corner: always visible, filled for a favourite, toggles on click. */
+    private Button createFavoriteButton() {
+        Button button = Ui.iconButton("star", null, () -> app.toggleFavorite(entry));
+        favoriteTooltip.setShowDelay(Duration.millis(350));
+        button.setTooltip(favoriteTooltip);
+        button.getStyleClass().add("card-btn");
+        button.addEventFilter(MouseEvent.MOUSE_CLICKED, MouseEvent::consume); // don't also select the card
+        return button;
     }
 
     /** The two buttons that fade in while the mouse is over the card: paste into an app, and copy. */
@@ -132,6 +150,8 @@ final class GifCard extends StackPane implements MasonryPane.HeightForWidth {
     /** Updates title, status badge and selection outline after the entry changed. */
     void refresh() {
         titleLabel.setText(entry.displayName());
+        Ui.setStarFilled(favoriteButton.getGraphic(), entry.favorite);
+        favoriteTooltip.setText(entry.favorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
         statusBadge.getChildren().clear();
         statusBadge.getStyleClass().removeAll("badge", "warn");
         if (statusBadgeTooltip != null) Tooltip.uninstall(statusBadge, statusBadgeTooltip);

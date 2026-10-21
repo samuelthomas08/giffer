@@ -41,6 +41,9 @@ final class GifEntry {
     int widthPixels;
     int heightPixels;
 
+    /** Marked by the user with the star; favourites have their own filter and win ties in the search. */
+    boolean favorite;
+
     String fileName() {
         return id + ".gif";
     }
@@ -75,6 +78,7 @@ final class GifEntry {
         json.put("sourceHint", sourceHint);
         json.put("width", widthPixels);
         json.put("height", heightPixels);
+        json.put("favorite", favorite);
         return json;
     }
 
@@ -95,6 +99,7 @@ final class GifEntry {
         if (json.get("addedAt") instanceof Number number) entry.addedAtMillis = number.longValue();
         if (json.get("width") instanceof Number number) entry.widthPixels = number.intValue();
         if (json.get("height") instanceof Number number) entry.heightPixels = number.intValue();
+        entry.favorite = Boolean.TRUE.equals(json.get("favorite"));
         return entry;
     }
 }

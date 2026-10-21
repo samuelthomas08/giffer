@@ -495,3 +495,17 @@
 .alt-tile:hover { -fx-background-color: -accent; }
 .alt-tile:selected { -fx-background-color: -accent; -fx-border-color: -ring; }
 .tile-image { -fx-background-color: -card; -fx-background-radius: 7; }
+
+/* ---------------------------------------------------------------- favourites (filled amber star) */
+
+.star-on .icon,
+.button .star-on .icon, .button:hover .star-on .icon,
+.button.card-btn .star-on .icon, .button.card-btn:hover .star-on .icon,
+.chip.active .star-on .icon {
+    -fx-fill: -warn;
+    -fx-stroke: -warn;
+}
+
+.chip .icon { -fx-stroke: -fg-muted; }
+.chip:hover .icon { -fx-stroke: -fg; }
+.chip.active .icon { -fx-stroke: -primary-fg; }
