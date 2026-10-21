@@ -1,0 +1,497 @@
+/* =====================================================================
+   Giffer – theme in the style of shadcn/ui (zinc): flat surfaces,
+   hairline borders, small radii, compact 36px controls, no gradients.
+   Tokens live on .root (dark) and .root.light.
+   ===================================================================== */
+
+.root {
+    -bg: #09090b;
+    -card: #101013;
+    -muted: #18181b;
+    -accent: #27272a;
+    -border: #27272a;
+    -input: #34343a;
+    -input-bg: rgba(255, 255, 255, 0.03);
+    -fg: #fafafa;
+    -fg-muted: #a1a1aa;
+    -fg-subtle: #71717a;
+    -primary: #fafafa;
+    -primary-hover: #e4e4e7;
+    -primary-fg: #18181b;
+    -ring: #a1a1aa;
+    -ring-glow: rgba(161, 161, 170, 0.20);
+    -destructive: #f87171;
+    -destructive-soft: rgba(248, 113, 113, 0.12);
+    -ok: #34d399;
+    -warn: #fbbf24;
+    -overlay: rgba(0, 0, 0, 0.64);
+    -shadow: rgba(0, 0, 0, 0.55);
+    -card-border: rgba(255, 255, 255, 0.10);
+    -card-border-hover: rgba(255, 255, 255, 0.30);
+    -thumb-off: #fafafa;
+    -thumb-on: #18181b;
+
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-background-color: -bg;
+
+    /* neutralise Modena's blue defaults for anything we do not restyle explicitly */
+    -fx-base: #18181b;
+    -fx-background: #09090b;
+    -fx-control-inner-background: #09090b;
+    -fx-accent: #a1a1aa;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-base-color: #fafafa;
+}
+
+.root.light {
+    -bg: #ffffff;
+    -card: #fafafa;
+    -muted: #f4f4f5;
+    -accent: #f4f4f5;
+    -border: #e4e4e7;
+    -input: #d8d8de;
+    -input-bg: #ffffff;
+    -fg: #09090b;
+    -fg-muted: #71717a;
+    -fg-subtle: #a1a1aa;
+    -primary: #18181b;
+    -primary-hover: #323237;
+    -primary-fg: #fafafa;
+    -ring: #71717a;
+    -ring-glow: rgba(113, 113, 122, 0.16);
+    -destructive: #dc2626;
+    -destructive-soft: rgba(220, 38, 38, 0.08);
+    -ok: #16a34a;
+    -warn: #d97706;
+    -overlay: rgba(9, 9, 11, 0.48);
+    -shadow: rgba(24, 24, 27, 0.16);
+    -card-border: rgba(0, 0, 0, 0.10);
+    -card-border-hover: rgba(0, 0, 0, 0.30);
+    -thumb-off: #ffffff;
+    -thumb-on: #fafafa;
+
+    -fx-background-color: -bg;
+    -fx-base: #f4f4f5;
+    -fx-background: #ffffff;
+    -fx-control-inner-background: #ffffff;
+    -fx-text-base-color: #09090b;
+}
+
+/* ---------------------------------------------------------------- text */
+
+.label { -fx-text-fill: -fg; }
+.label.muted { -fx-text-fill: -fg-muted; }
+.label.subtle { -fx-text-fill: -fg-subtle; }
+.label.small { -fx-font-size: 12.5px; }
+.label.h1 { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 20px; }
+.label.brand { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 14.5px; }
+.label.field-label { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 13px; -fx-text-fill: -fg; }
+.label.detail-title { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 15px; }
+.label.modal-title { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 18px; }
+.label.drop-text { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 18px; }
+.label.ok-text { -fx-text-fill: -ok; }
+.label.err-text { -fx-text-fill: -destructive; }
+
+.kbd {
+    -fx-background-color: -muted;
+    -fx-background-radius: 5;
+    -fx-border-color: -border;
+    -fx-border-radius: 5;
+    -fx-text-fill: -fg-subtle;
+    -fx-font-size: 11.5px;
+    -fx-padding: 1 6 1 6;
+}
+
+/* ---------------------------------------------------------------- icons (Lucide strokes) */
+
+.icon {
+    -fx-fill: transparent;
+    -fx-stroke: -fg-muted;
+    -fx-stroke-width: 2;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.button:hover .icon { -fx-stroke: -fg; }
+.button.primary .icon, .button.primary:hover .icon { -fx-stroke: -primary-fg; }
+.button.danger .icon, .button.danger:hover .icon { -fx-stroke: -destructive; }
+.button.danger-solid .icon, .button.danger-solid:hover .icon { -fx-stroke: white; }
+.ok-icon .icon { -fx-stroke: -ok; }
+.err-icon .icon { -fx-stroke: -destructive; }
+.warn-icon .icon { -fx-stroke: -warn; }
+.info-icon .icon { -fx-stroke: -fg-muted; }
+
+/* ---------------------------------------------------------------- header */
+
+.header {
+    -fx-background-color: -bg;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo { -fx-background-color: -primary; -fx-background-radius: 7; }
+.logo-text { -fx-text-fill: -primary-fg; -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 10px; }
+
+.search-box {
+    -fx-background-color: -input-bg;
+    -fx-background-radius: 8;
+    -fx-border-color: -input;
+    -fx-border-radius: 8;
+    -fx-padding: 0 8 0 12;
+    -fx-min-height: 36;
+    -fx-pref-height: 36;
+    -fx-max-height: 36;
+}
+.search-box:focus-within {
+    -fx-border-color: -ring;
+    -fx-effect: dropshadow(gaussian, -ring-glow, 5, 0.6, 0, 0);
+}
+
+.search-field, .search-field:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0 4 0 4;
+    -fx-text-fill: -fg;
+    -fx-prompt-text-fill: -fg-subtle;
+    -fx-font-size: 14px;
+    -fx-highlight-fill: -fg-muted;
+    -fx-highlight-text-fill: -bg;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.button {
+    -fx-background-color: -accent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-text-fill: -fg;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 13.5px;
+    -fx-padding: 0 14 0 14;
+    -fx-min-height: 36;
+    -fx-pref-height: 36;
+    -fx-max-height: 36;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8;
+}
+.button:hover { -fx-background-color: derive(-accent, 12%); }
+.button:pressed { -fx-opacity: 0.85; }
+.button:disabled { -fx-opacity: 0.45; }
+
+.button.primary { -fx-background-color: -primary; -fx-text-fill: -primary-fg; }
+.button.primary:hover { -fx-background-color: -primary-hover; }
+
+.button.outline { -fx-background-color: transparent; -fx-border-color: -input; }
+.button.outline:hover { -fx-background-color: -accent; }
+
+.button.ghost { -fx-background-color: transparent; -fx-text-fill: -fg-muted; }
+.button.ghost:hover { -fx-background-color: -accent; -fx-text-fill: -fg; }
+
+.button.danger { -fx-background-color: transparent; -fx-text-fill: -destructive; }
+.button.danger:hover { -fx-background-color: -destructive-soft; }
+.button.danger-solid { -fx-background-color: -destructive; -fx-text-fill: white; }
+.button.danger-solid:hover { -fx-background-color: derive(-destructive, -8%); }
+
+.button.small { -fx-min-height: 32; -fx-pref-height: 32; -fx-max-height: 32; -fx-padding: 0 12 0 12; -fx-font-size: 13px; }
+.button.big { -fx-min-height: 40; -fx-pref-height: 40; -fx-max-height: 40; -fx-padding: 0 20 0 20; }
+
+.button.icon-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-min-width: 36; -fx-pref-width: 36; -fx-max-width: 36;
+}
+.button.icon-btn:hover { -fx-background-color: -accent; }
+.button.icon-btn.mini {
+    -fx-min-width: 26; -fx-pref-width: 26; -fx-max-width: 26;
+    -fx-min-height: 26; -fx-pref-height: 26; -fx-max-height: 26;
+    -fx-background-radius: 6;
+}
+
+.button.card-btn {
+    -fx-background-color: rgba(9, 9, 11, 0.72);
+    -fx-background-radius: 8;
+    -fx-min-width: 30; -fx-pref-width: 30; -fx-max-width: 30;
+    -fx-min-height: 30; -fx-pref-height: 30; -fx-max-height: 30;
+}
+.button.card-btn:hover { -fx-background-color: #fafafa; }
+.button.card-btn .icon, .button.card-btn:hover .icon { -fx-stroke: white; }
+.button.card-btn:hover .icon { -fx-stroke: #09090b; }
+
+/* ---------------------------------------------------------------- inputs */
+
+.input, .text-field.input, .password-field.input, .text-area.input {
+    -fx-background-color: -input-bg;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: -input;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 0 12 0 12;
+    -fx-min-height: 36;
+    -fx-pref-height: 36;
+    -fx-text-fill: -fg;
+    -fx-prompt-text-fill: -fg-subtle;
+    -fx-highlight-fill: -fg-muted;
+    -fx-highlight-text-fill: -bg;
+    -fx-control-inner-background: -bg;
+}
+.input:focused, .text-field.input:focused, .password-field.input:focused, .text-area.input:focused {
+    -fx-background-color: -input-bg;
+    -fx-background-insets: 0;
+    -fx-border-color: -ring;
+    -fx-effect: dropshadow(gaussian, -ring-glow, 5, 0.6, 0, 0);
+}
+.text-area.input { -fx-padding: 2; -fx-pref-height: -1; -fx-min-height: 36; }
+.text-area.input .scroll-pane, .text-area.input .viewport, .text-area.input .content {
+    -fx-background-color: transparent;
+}
+.text-area.input .content { -fx-padding: 7 10 7 10; }
+
+.check-box { -fx-text-fill: -fg; -fx-cursor: hand; }
+.check-box .label { -fx-text-fill: -fg; }
+.check-box .box {
+    -fx-background-color: -input-bg;
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
+    -fx-border-color: -input;
+    -fx-border-radius: 4;
+    -fx-padding: 3;
+}
+.check-box:selected .box { -fx-background-color: -primary; -fx-border-color: -primary; }
+.check-box .mark { -fx-background-color: transparent; -fx-padding: 4 5 4 5; }
+.check-box:selected .mark { -fx-background-color: -primary-fg; }
+
+/* switch */
+.switch { -fx-background-color: -input; -fx-background-radius: 10; -fx-cursor: hand; }
+.switch:selected { -fx-background-color: -primary; }
+.switch-thumb { -fx-background-color: -thumb-off; -fx-background-radius: 8; }
+.switch:selected .switch-thumb { -fx-background-color: -thumb-on; }
+
+/* tabs-style segmented control */
+.seg { -fx-background-color: -muted; -fx-background-radius: 9; -fx-padding: 3; }
+.toggle-button.seg-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-text-fill: -fg-muted;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 13px;
+    -fx-padding: 0 14 0 14;
+    -fx-min-height: 28; -fx-pref-height: 28; -fx-max-height: 28;
+    -fx-cursor: hand;
+}
+.toggle-button.seg-btn:hover { -fx-text-fill: -fg; }
+.toggle-button.seg-btn:selected {
+    -fx-background-color: -bg;
+    -fx-text-fill: -fg;
+    -fx-effect: dropshadow(gaussian, -shadow, 3, 0.0, 0, 1);
+}
+
+/* ---------------------------------------------------------------- chips & tags */
+
+.chip {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-border-color: -input;
+    -fx-border-radius: 999;
+    -fx-text-fill: -fg-muted;
+    -fx-padding: 0 12 0 12;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+.chip:hover { -fx-background-color: -accent; -fx-text-fill: -fg; }
+.chip.active { -fx-background-color: -primary; -fx-border-color: -primary; -fx-text-fill: -primary-fg; -fx-font-family: "Segoe UI Semibold"; }
+
+.tag-editor {
+    -fx-background-color: -input-bg;
+    -fx-background-radius: 8;
+    -fx-border-color: -input;
+    -fx-border-radius: 8;
+    -fx-padding: 6;
+    -fx-cursor: text;
+}
+.tag-editor:focus-within { -fx-border-color: -ring; -fx-effect: dropshadow(gaussian, -ring-glow, 5, 0.6, 0, 0); }
+.tag { -fx-background-color: -accent; -fx-background-radius: 6; -fx-padding: 2 4 2 8; }
+.tag-text { -fx-text-fill: -fg; -fx-font-size: 12.5px; }
+.tag-x { -fx-cursor: hand; -fx-padding: 2; -fx-background-radius: 4; }
+.tag-x .icon { -fx-stroke: -fg-subtle; }
+.tag-x:hover .icon { -fx-stroke: -fg; }
+.tag-input, .tag-input:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 3 4 3 4;
+    -fx-text-fill: -fg;
+    -fx-prompt-text-fill: -fg-subtle;
+    -fx-highlight-fill: -fg-muted;
+    -fx-highlight-text-fill: -bg;
+}
+
+/* ---------------------------------------------------------------- grid & cards */
+
+.grid-scroll, .grid-scroll > .viewport, .detail-scroll, .detail-scroll > .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.scroll-pane { -fx-background-color: transparent; -fx-padding: 0; }
+.scroll-pane > .corner { -fx-background-color: transparent; }
+
+.card {
+    -fx-background-color: -card;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+.card-ring { -fx-background-color: transparent; -fx-border-color: -card-border; -fx-border-width: 1; -fx-border-radius: 12; }
+.card:hover .card-ring { -fx-border-color: -card-border-hover; }
+.card:selected .card-ring, .card:selected:hover .card-ring { -fx-border-color: -primary; -fx-border-width: 2; }
+
+.card-overlay {
+    -fx-background-color: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.74));
+    -fx-padding: 28 12 10 12;
+}
+.card-title { -fx-text-fill: white; -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 13px; }
+
+.badge {
+    -fx-background-color: rgba(9, 9, 11, 0.72);
+    -fx-background-radius: 7;
+    -fx-padding: 5;
+}
+.badge .icon { -fx-stroke: white; }
+.badge.warn .icon { -fx-stroke: #fbbf24; }
+
+/* ---------------------------------------------------------------- detail panel */
+
+.detail {
+    -fx-background-color: -bg;
+    -fx-border-color: -border transparent transparent -border;
+    -fx-border-width: 0 0 0 1;
+}
+.preview { -fx-background-color: -card; -fx-background-radius: 12; }
+.preview-ring { -fx-background-color: transparent; -fx-border-color: -card-border; -fx-border-radius: 12; -fx-border-width: 1; }
+.status-row {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-padding: 8 8 8 12;
+}
+
+/* ---------------------------------------------------------------- empty states, pills, toasts */
+
+.empty-ring {
+    -fx-background-color: -muted;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-min-width: 56; -fx-min-height: 56;
+}
+.empty-ring .icon { -fx-stroke: -fg-muted; }
+
+.pill {
+    -fx-background-color: -card;
+    -fx-background-radius: 999;
+    -fx-border-color: -border;
+    -fx-border-radius: 999;
+    -fx-padding: 8 16 8 12;
+    -fx-effect: dropshadow(gaussian, -shadow, 14, 0.0, 0, 4);
+}
+
+.toast {
+    -fx-background-color: -card;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-padding: 11 16 11 14;
+    -fx-effect: dropshadow(gaussian, -shadow, 22, 0.0, 0, 8);
+}
+.toast-text { -fx-text-fill: -fg; -fx-font-size: 13.5px; }
+
+.drop-overlay {
+    -fx-background-color: -overlay;
+    -fx-border-color: -fg-muted;
+    -fx-border-width: 2;
+    -fx-border-style: dashed;
+    -fx-border-insets: 14;
+    -fx-border-radius: 14;
+}
+.drop-overlay .icon { -fx-stroke: -fg; }
+
+/* ---------------------------------------------------------------- modal */
+
+.modal-layer { -fx-background-color: -overlay; }
+.modal {
+    -fx-background-color: -bg;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, -shadow, 40, 0.1, 0, 12);
+}
+
+/* ---------------------------------------------------------------- scrollbars, tooltips, spinners */
+
+.scroll-bar { -fx-background-color: transparent; -fx-padding: 2; }
+.scroll-bar:vertical { -fx-pref-width: 10; }
+.scroll-bar > .track, .scroll-bar > .track-background { -fx-background-color: transparent; -fx-border-color: transparent; }
+.scroll-bar > .thumb { -fx-background-color: rgba(128, 128, 140, 0.34); -fx-background-radius: 99; -fx-background-insets: 0; }
+.scroll-bar > .thumb:hover { -fx-background-color: rgba(128, 128, 140, 0.60); }
+.scroll-bar > .increment-button, .scroll-bar > .decrement-button {
+    -fx-padding: 0; -fx-pref-height: 0; -fx-pref-width: 0; -fx-background-color: transparent;
+}
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow { -fx-padding: 0; -fx-shape: ""; }
+
+.tooltip {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #18181b;
+    -fx-background-radius: 6;
+    -fx-font-size: 12px;
+    -fx-padding: 5 9 5 9;
+}
+
+.progress-indicator { -fx-progress-color: -fg-muted; }
+
+/* ---------------------------------------------------------------- window picker (paste target) */
+
+.picker-scroll {
+    -fx-background-color: -input-bg;
+    -fx-background-radius: 8;
+    -fx-border-color: -input;
+    -fx-border-radius: 8;
+}
+.picker-scroll > .viewport { -fx-background-color: transparent; }
+.pick-row {
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6;
+    -fx-padding: 7 10 7 10;
+    -fx-cursor: hand;
+}
+.pick-row:hover { -fx-background-color: -accent; }
+.pick-row:selected { -fx-background-color: -accent; -fx-border-color: -ring; }
+.label.pick-name { -fx-font-family: "Segoe UI Semibold"; -fx-font-size: 13.5px; }
+.label.pick-title { -fx-text-fill: -fg-muted; -fx-font-size: 12.5px; }
+.label.soft-badge {
+    -fx-background-color: -muted;
+    -fx-background-radius: 6;
+    -fx-text-fill: -fg-muted;
+    -fx-font-size: 11.5px;
+    -fx-padding: 2 8 2 8;
+}
+
+/* ---------------------------------------------------------------- suggestion dialog */
+
+.alt-tile {
+    -fx-padding: 6;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+}
+.alt-tile:hover { -fx-background-color: -accent; }
+.alt-tile:selected { -fx-background-color: -accent; -fx-border-color: -ring; }
+.tile-image { -fx-background-color: -card; -fx-background-radius: 7; }

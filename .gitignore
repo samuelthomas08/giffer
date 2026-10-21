@@ -1,0 +1,14 @@
+# build output
+out/
+build/
+dist/
+
+# JavaFX jars are downloaded (and checksum-verified) by scripts/download-javafx.ps1
+lib/
+
+# IDE settings
+.idea/
+*.iml
+
+# local test data and logs
+*.log

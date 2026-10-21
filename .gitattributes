@@ -1,0 +1,5 @@
+# Let git normalise line endings, but keep Windows batch files in CRLF so cmd.exe runs them reliably
+* text=auto
+*.bat text eol=crlf
+*.png binary
+*.ico binary

@@ -1,0 +1,55 @@
+name: Build Windows app
+
+# Every push to master builds Giffer into a self-contained Windows app (its own Java runtime and JavaFX are
+# included) and publishes it as the release "latest", so there is always one download link that is current:
+#   https://github.com/<owner>/<repo>/releases/latest/download/Giffer-windows-x64.zip
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create the release
+
+concurrency:
+  group: release-latest
+  cancel-in-progress: false   # never cancel a run that is in the middle of replacing the release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Install JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Build the app (downloads JavaFX with pinned checksums, compiles, runs jpackage)
+        shell: pwsh
+        run: ./scripts/package.ps1 -Version "1.0.${{ github.run_number }}"
+
+      - name: Publish the zip as release "latest"
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $shortSha = $env:GITHUB_SHA.Substring(0, 7)
+          $notes = "Automatic build of master (commit $shortSha, run #$env:GITHUB_RUN_NUMBER). " +
+                   "Unzip it and start Giffer.exe - Java is included, nothing else to install."
+          $notes | Set-Content -Path release-notes.md -Encoding utf8
+
+          # replace the previous build: delete the old release and its tag, then create both again
+          gh release view latest *> $null
+          if ($LASTEXITCODE -eq 0) { gh release delete latest --yes --cleanup-tag }
+
+          gh release create latest dist/Giffer-windows-x64.zip `
+            --target $env:GITHUB_SHA `
+            --title "Giffer - latest build" `
+            --notes-file release-notes.md `
+            --latest
