@@ -521,7 +521,7 @@ public final class GifferApp extends Application {
         if (card != null) card.refresh();
         if (selectedEntry == entry) detailPanel.refreshFavorite(entry);
         saveDebounce.playFromStart();
-        if (favoritesOnly) refreshResultsSoon();
+        if (favoritesOnly || !searchField.getText().isBlank()) refreshResultsSoon();
     }
 
     /** One line of chips; whatever does not fit is hidden (the first chip, "Alle", always stays). */
